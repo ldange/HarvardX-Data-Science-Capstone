@@ -1,7 +1,7 @@
 ---
 title: "HarvardX: PH125.9x Data Science - Capstone \n   Project Kickstarter - Crowdfunding Success Prediction"
 author: "Léo Dange - https://github.com/ldange"
-date: "12/22/2020"
+date: "January 1st, 2021"
 output: word_document
 ---
 
@@ -10,15 +10,15 @@ output: word_document
 
 # Introduction
 
-Related to the ***Harvardx Data Science Program - Capstone PH125.9x***, this second project of building machine learning algorythm concern the kickstarter platform and it's crowdfunding project. I have been using kickstarter as a "pledger/founder" for many years and I recently helped a friends to launch a project that indeed has not been sucessfully funded. 
+Related to the ***Harvardx Data Science Program - Capstone PH125.9x***, this second project of building a machine learning algorithm concerns the Kickstarter platform and its crowdfunding project. I have been using Kickstarter as a "pledger/founder" for many years and I recently helped a friend to launch a project that indeed has not been successfully funded. 
 
-Kickstarter as a platform is for me an incredible opportunity to help brilliant people to developp a product and launch their company. I like to concept and all it's aspects, but It is sometimes complicate to analyse and understand what determine the success or failure of a project. For some of them it can be obvious but some are more tricky. I often have issue understanding why some projects did got the finance when I though (in my own opinion) they would not have success, and why sometime projects failed when I though they should have succeeded.
+Kickstarter as a platform is for me an incredible opportunity to help brilliant people to develop a product and launch their company. I like to concept and all its aspects, but It is sometimes complicated to analyze and understand what determines the success or failure of a project. For some of them, it can be obvious but some are more tricky. I often have issues understanding why some projects did get the finance when I thought (in my own opinion) they would not have success, and why sometimes projects failed when I thought they should have succeeded.
 
-This project will help us to determine if we can predict the sucess or failure of a project regarding few variables.
+This project will help us to determine if we can predict the success or failure of a project regarding a few variables.
 
 This Report will present you the ***Project Goal, the Data used, The Methods and Analysis of the results*** and at the end some ***Conclusion***.
 
-The project will be delivered of the following files :
+The project will be delivered with the following files :
 
 - The Report in .pdf
 
@@ -26,11 +26,15 @@ The project will be delivered of the following files :
 
 - The Code and Script in .R
 
+***for readability purposes, the plot codes of the .pdf report are hidden, they are available in the .Rmd version of the report.***
+
+***The code of all calculations, database construction, data frame modifications, or algorithm construction are displayed on all versions.***
+
 \newpage
 
 ## Project's Goal
 
-As explained in the Introduction, the Project's Goal is to build a machine learning algorythm able to predict the sucess of a project. We will build several models and make them compete to determine which one is the most accurate.
+As explained in the Introduction, the Project's Goal is to build a machine learning algorithm able to predict the success of a project. We will build several models and make them compete to determine which one is the most accurate.
 
 To evaluate our work we are going to use the Root Mean Square Error or RMSE :
 
@@ -42,7 +46,7 @@ The best model will be defined as the one with the lowest RMSE, this time we do 
 
 ## Data
 
-Our two sets are based on the Kickstarter project Database available on Kaggle (link in the code bellow) originally contains **378'661 projects, 15 variables/observation**. Before using We will :
+Our two sets are based on the Kickstarter project Database available on Kaggle (link in the code below) originally contains **378'661 projects, 15 variables/observation**. Before using We will :
 
 1) start by removing renaming and reordering columns.
 
@@ -50,9 +54,9 @@ Our two sets are based on the Kickstarter project Database available on Kaggle (
 
 After those modifications our dataframe will contain **370'454 observations & 11 variables**.
 
-Then we split this data set in two partitions and i chose to keep the 90/10 as we did in our MovieLens Analysis. the train_kickstarter set (train set) will hold 90% of the data, and the validation_kickstarter 10% left.
+Then we split this data set into two partitions, for this operation I chose to keep the 90/10 as we did in our MovieLens Analysis. the train_kickstarter set (train set) will hold 90% of the data, and the validation_kickstarter 10% left.
 
-For simplicity the Dataset has been download from Kaggle then upload on my github repository dedicated to this project.
+For simplicity, the Dataset has been download from Kaggle then upload to my GitHub repository, dedicated to this project.
 
 ```{r echo = TRUE, message = FALSE, warning = FALSE, eval = TRUE}
 ##########################################################
@@ -105,7 +109,7 @@ train_kickstarter <- kickstarter[-test_index_kickstarter,]
 validation_kickstarter <- kickstarter[test_index_kickstarter,]
 ```
 
-As stated before, the two sets are now composed of 11 variables instead of the original 15 and we can see that the edx set is, as chosen, containing 90% of the data.
+As stated before, the two sets are now composed of 11 variables instead of the original 15 and we can see that the ***train_kickstarter set is, as chosen, containing 90% of the data***.
 
 ```{r}
 str(train_kickstarter)
@@ -130,9 +134,19 @@ The 11 remaining features/variables/columns in both datasets are as follow :
 head(train_kickstarter, n=3)
 ```
 
-To be able to conduct an Exploratory Data Analysis those data will need at least one transformations, in addition of cleaning/reorganising we proceed before. We will use an ***eda*** dataframe to do our exploration, without any risk of alteration for the train set. This set will be ***train_eda_kickstarter***.
+Our EDA will be conducted in three steps.
 
-- Add a **funding_percentage** variable that tell us the percentage of funding of the project
+1) Funding Analysis - Aiming to analyze if any patterns can be found regarding the funding (and success of a project).
+
+2) Category Analysis - What category are more likely to have a project funded, are they all the same, is there any "go-to" sub_category that the project creator should relate to?
+
+3) Country Analysis - Which country is most likely to use Kickstarter, are they all funded the same, ...
+
+Then we will summarize our analysis.
+
+To be able to conduct an Exploratory Data Analysis those data will need at least one transformation, in addition to cleaning/reorganizing we proceed before. We will use an ***eda*** data frame to do our exploration, without any risk of alteration for the train set. This set will be ***train_eda_kickstarter***.
+
+- Add a **funding_percentage** variable that tells us the percentage of funding of the project
 
 ```{r}
 # Create a completion percentage for each project and limiting the number to only two digits (for the whole project).
@@ -146,20 +160,20 @@ options(digits=2)
 
 ### Funding Analysis
 
-We will start our analysis by a quick Funding Analysis. This first plot will help us to understand which part of project are successful.
+We will start our analysis with a quick Funding Analysis. This first plot will help us to understand which part of the project is successful.
 
-First major information, we can see that most of projects failed on Kickstarter.
+First major information, we can see that most of the projects failed on Kickstarter.
 
-```{r}
+```{r echo=FALSE, fig.width=9}
 # Ploting the Status Distribution
 train_eda_kickstarter %>% 
     ggplot(aes(status)) + 
     geom_bar(fill = "skyblue3") + 
-    scale_y_continuous(breaks = c(seq(0, 180000, 10000))) 
+    scale_y_continuous(breaks = c(seq(0, 180000, 10000))) + 
+  ggtitle("Status Distribution")
 ```
 
-**Failed project represent 53.37%** of all projects, when **sucessful project are only 36.15%**. Finally, **Canceled project represent the remaining 10.48%**.
-
+**Failed project represent 53.37%** of all projects when **successful projects are only 36.15%**. Finally, **Canceled projects represent the remaining 10.48%**.
 
 ```{r}
 # Looking at the Failing & Canceled ratio of projects 
@@ -170,21 +184,21 @@ kickstarter_successful <- train_eda_kickstarter %>% filter(status == "successful
 kickstarter_successful
 ```
 
-Still, one third of the project getting marked as successful seems a lot, comparing to the average success of a company/product "in real life". when we look at the dataframe, lots of successful projects had goal of 1 / 10 or 100 dollars, which is quickly reached but doesn't guarantee any product release.
+Still, one-third of the project getting marked as successful seems a lot, comparing to the average success of a company/product "in real life". when we look at the data frame, lots of successful projects had a goal of 1 / 10 or 100 dollars, which is quickly reached but doesn't guarantee any product release.
 
-**2'386 projects** have a goal inferior to 200 dollars and less than 10 backers in the project. Some even have 0 backers and seems successful because the creator pledge itself.
+**2'386 projects** have a goal inferior to 200 dollars and less than 10 backers in the project. Some even have 0 backers and seems successful because of the creator pledge itself.
 
 ```{r}
 #Counting Sucessfull projects with less than 200 of goals and 10 backers 
 train_eda_kickstarter %>% filter(status == "successful" & goal <= 200 & backers <= 10) %>% count()
 ```
 
+Canceled projects are often related to insufficient backers/funds, crater rather canceled the project before the end of the financing schedule instead of waiting knowing it won't be successful anyway. In our case, we do not have the reason why the project was canceled but we can analyze what percentage of founding received the canceled project.
 
-Canceled project are often related to insufisant backers/fund, crater rather canceled the project before then end of the financing schedule instead of waiting knowing it won't be successful anyway. In our case we do not have the reason of why the project was canceled but we can analyze what percentage of founding received the canceled project.
+**Only 649 of the 34'901 canceled projects reach at least 100% of the funding goal**, which means **34'252 projects were not funded before they were canceled**.
 
-**Only 649 of the 34'901 canceled projects reach at least 100% of the funding goal**, which mean **34'252 projects where not funded before they were canceled**.
+On the 649 funded projects but canceled, **103 projects had goals below 200$**, which reduce more the number of projects that reach a real funding goal.
 
-On the 649 funded projects but canceled, **103 projects had goals bellow 200$**, which reduce more the number of projects that reach a real funding goal.
 ```{r}
 # Project funded but canceled
 train_eda_kickstarter %>% filter(status == "canceled" & funding_percentage >= 100) %>% count()
@@ -193,9 +207,9 @@ train_eda_kickstarter %>% filter(status == "canceled" & funding_percentage >= 10
 train_eda_kickstarter %>% filter(status == "canceled"& goal >= 200 & funding_percentage >= 100) %>% count()
 ```
 
-If we look at the projects that were canceled without been founded, we see that ***most of the project got between 0 (first quartile) and 8% (third quartile) of their funding goal, with a median bellow 2%.*** We exclude canceled project with over 100% of funding on this boxplot
+If we look at the projects that were canceled without been founded, we see that ***most of the projects got between 0 (first quartile) and 8% (third quartile) of their funding goal, with a median bellow 2%.*** We exclude canceled project with over 100% of funding on this boxplot
 
-```{r message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.width=9, message=FALSE, warning=FALSE}
 # Boxplot of the Canceled Status regarding the funding_percentage
 train_eda_kickstarter %>% 
   filter(status == "canceled" & funding_percentage < 100) %>%
@@ -210,8 +224,9 @@ train_eda_kickstarter %>%
 ### Category Analysis
 We will now analyze the category.
 
-By looking at the main category distribution bellow, we can see that most used main category is in order **Film & Video, Music, Publishing, Games & Technology**.
-```{r}
+By looking at the main category distribution bellow, we can see that the most used main category is in order **Film & Video, Music, Publishing, Games & Technology**.
+
+```{r echo=FALSE, fig.width=9}
 # Plot distribution of the Main Category
 train_eda_kickstarter %>% 
   ggplot(aes(main_category, fill = status)) + 
@@ -221,9 +236,21 @@ train_eda_kickstarter %>%
   ggtitle("Main Category Distribution")
 ```
 
-For all category excepted **Music, Comics, Dance & Theater**, there is more canceled & Failed projects than successful one. Three of those 4 main category ***Comics, Dance & Theater*** are in the & least used main category of the entire platform.
+For all category excepted **Comics, Dance & Theater**, there is more canceled & Failed projects than a successful one. All those main categories ***Comics, Dance & Theater*** are in the & least used the main category of the entire platform.
 
 ```{r}
+comics_ratio <- train_eda_kickstarter %>% filter(status == "successful" & main_category == "Comics") %>% count() / train_eda_kickstarter %>% filter(main_category == "Comics") %>% count()
+comics_ratio
+
+dance_ratio <- train_eda_kickstarter %>% filter(status == "successful" & main_category == "Dance") %>% count() / train_eda_kickstarter %>% filter(main_category == "Dance") %>% count()
+dance_ratio
+
+theater_ratio <- train_eda_kickstarter %>% filter(status == "successful" & main_category == "Theater") %>% count() / train_eda_kickstarter %>% filter(main_category == "Theater") %>% count()
+theater_ratio
+```
+
+
+```{r echo=FALSE, fig.width=9}
 # Plotting the Sub_category distribution for the fifth biggest main_category
 train_eda_kickstarter %>% 
   filter(main_category %in% c("Film & Video", "Music", "Publishing", "Games", "Technology")) %>%
@@ -234,11 +261,12 @@ train_eda_kickstarter %>%
      ggtitle("Sub Category Distribution for 5 Most Used Main Category") +
   facet_grid(.~main_category)
 ```
+
 For each of the 5 most used main category, is always two or three sub_category that are way more used than de rest of the entire category.
 
-For our next plot we've looked on all the sub_category and we saw there is 7 sub_category where there is more successful projects than failed and canceled one. We've ploted the status for each of them. This information could help kickstarters to understand where to post their projects to maximize the chance of funding. 
+For our next plot we've looked on all the sub_category and we saw there is 7 sub_category where there are more successful projects than failed and canceled one. We've plotted the status for each of them. This information could help Kickstarters to understand where to post their projects to maximize the chance of funding. 
 
-```{r}
+```{r echo=FALSE, fig.width=9}
 # Grid Faceting plot of the best sub_category regarding their status
 
 train_eda_kickstarter %>% 
@@ -253,8 +281,8 @@ train_eda_kickstarter %>%
     facet_grid(.~sub_category)
 ```
 
-
 We will plot the best and the worst "canceled project" regarding their genre.
+
 ```{r}
 #Creating dataframes for the highest & lowest funding_percentage but canceled project
 
@@ -267,26 +295,27 @@ worst_canceled <- train_eda_kickstarter %>%
   filter(status == "canceled" & funding_percentage <= 100)
 
 worst_canceled <- data.frame(main_category = worst_canceled$main_category,funding_percentage = worst_canceled$funding_percentage)
-
+```
+```{r echo=FALSE, fig.height=9, fig.width=9}
 # Plotting the distribution regarding the category
 
 best_plot <- best_canceled %>% ggplot(aes(main_category)) + 
   geom_bar(fill = "skyblue3") + 
   theme(axis.text.x = element_text(angle = 90)) + 
-  ggtitle("genre distribution for best canceled project")
+  ggtitle("Projects Funded but canceled per Genre")
 
 worst_plot <- worst_canceled %>% ggplot(aes(main_category)) + 
   geom_bar(fill = "skyblue3") + 
   theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("genre distribution for worst canceled project")
+  ggtitle("Project not Funded and canceled per Genre")
 
 grid.arrange(best_plot,worst_plot, ncol = 1)
-
 ```
 
-We can see on those two plots that, Design, Games & Technology are vastly present in the canceled projects.Except for the Design category, almost all project's category mostly failed and were canceled, rather than being funded but canceled, which is not surprising.
 
-We will construct a kick dataframe regarding the amount of project for each main_category and the ratio of successful project to see if there is any correlation.
+We can see on those two plots that, Design, Games & Technology are vastly present in the canceled projects. Except for the Design category, almost all project categories mostly failed and were canceled, rather than being funded but canceled, which is not surprising.
+
+We will construct a kick data frame regarding the amount of project for each main_category and the ratio of a successful project to see if there is any correlation.
 
 ```{r}
 # create dataframes for the total projects and sucessful project for each main_category
@@ -315,7 +344,8 @@ success_ratio <- data.frame(main_category = projects_maincategory$main_category,
 projects_maincategory <- left_join(projects_maincategory,success_ratio)
 ```
 
-A quick look at the values
+A quick look at the values.
+
 ```{r}
 # Looking at the data
 head(projects_maincategory, n=5)
@@ -326,36 +356,35 @@ head(projects_maincategory, n=5)
 projects_maincategory %>% summarize(r = cor(total,success_ratio))
 ```
 
-We could have think that the bigger the category is, to bigger the chance of funding is (due to traffic on this category), but we can see that there is strictly no correlation between the amount of projects and the ratio of sucessfully funded project.
+We could have thought that the bigger the category is, to bigger the chance of funding is (due to traffic on this category), but we can see that there is strictly no correlation between the number of projects and the ratio of the successfully funded projects.
 
-```{r}
+```{r echo=FALSE, fig.width=9}
 # Plotting the total project and success ratio with a regression line
 projects_maincategory %>% 
   ggplot(aes(total, success_ratio)) + geom_smooth(method=lm, se=FALSE) +
   geom_point() +
   ggtitle("Correlation between Total projects and Success ratio")
-
 ```
 
 \newpage
 
 ### Country Analysis
 
-Lastly we will conduct an analysis to analyse trend regarding the different countries.
+Lastly, we will conduct an analysis to analyze the trend in different countries.
 
-We start our analysis with a country distribution that show US as the biggest provider of projects, followed by Great Britain, Canada and Australia. All English speaker country.
-```{r}
+We start our analysis with a country distribution that shows the US as the biggest provider of projects, followed by Great Britain, Canada, and Australia. All English speaker country.
+
+```{r echo=FALSE, fig.width=9}
 # Ploting the country Distribution
 train_eda_kickstarter %>% 
     ggplot(aes(country)) + 
     geom_bar(fill = "skyblue3") +
     ggtitle("Country Distribution")
-
 ```
 
-If we look at the status for each country, we see that no country as more sucessful projects than failed/conceled projects.
+If we look at the status of each country, we see that no country has more successful projects than failed/canceled projects.
 
-```{r}
+```{r echo=FALSE, fig.height=12, fig.width=9}
 train_eda_kickstarter %>% 
   group_by(country) %>%
   ggplot(aes(status, fill = status)) + 
@@ -363,10 +392,9 @@ train_eda_kickstarter %>%
   geom_text(stat='count', aes(label=..count..), vjust=-1, size = 3) +
   facet_wrap(country~., ncol = 4) +
   ggtitle("Status per Country")
-
 ```
 
-This is comfirmed by the sucess rate for each country.
+This is confirmed by the success rate for each country.
 
 ```{r}
 # Creating dataframe regarding sucess ratio per country
@@ -390,25 +418,235 @@ country_total_success <- left_join(country_total_success,country_success)
 country_total_success <- left_join(country_total_success,country_ratio)
 ```
 
-Here is the plot of the sucess rate. Wee quickly see that the amount of projects (previous graph) have zero impact on the sucess ratio for each country.
-```{r}
+Here is the plot of the success rate. We quickly see that the number of projects (previous graph) has zero impact on the success ratio for each country.
+
+```{r echo=FALSE, fig.width=9}
 country_total_success %>% 
     ggplot(aes(country, success_ratio)) + 
     geom_col(fill = "skyblue3") +
     ggtitle("Sucess rate per country")
 ```
 
-Now we are interested of the amount of backers regarding the origins/country of the projects.
+Now we are interested in the number of backers regarding the origins/country of the projects. We see that this distribution is almost the same as the one regarding the project per country.
 
 ```{r}
+# Count Backers per Country
+country_backers <- train_eda_kickstarter %>% 
+  group_by(country) %>% 
+  count(backers)
 
+country_backers <- data.frame(country = country_backers$country, 
+                              backers = as.numeric(country_backers$backers), 
+                              total = as.numeric(country_backers$n))
+
+country_backers<- country_backers %>%
+     group_by(country) %>%
+     dplyr::summarise(total_backers = backers * total) %>%
+     mutate(total_backers = total_backers)
+```
+```{r echo=FALSE, fig.width=9}
+# Plot Backers distribution per country
+country_backers %>% 
+  group_by(country) %>%
+          ggplot(aes(country,total_backers)) + 
+           geom_col(fill = "skyblue3") +
+           ggtitle("Backers Distribution")
 ```
 
 
+
+It would have been interesting to know the origins of the backers to try to establish a trend of project backing. Having a look at the backer's distribution per main_category highlights that, even if ***Games, Design & Technology*** are not the 3 most used main_category regarding projects, they are regarding backers interest.
+
+```{r}
+# Count Backers per Country
+category_backers <- train_eda_kickstarter %>% 
+     group_by(main_category) %>% 
+     count(backers)
+
+category_backers <- data.frame(main_category = category_backers$main_category, 
+                              backers = as.numeric(category_backers$backers), 
+                              total = as.numeric(category_backers$n))
+
+category_backers<- category_backers %>%
+     group_by(main_category) %>%
+     dplyr::summarise(total_backers = backers * total) %>%
+     mutate(total_backers = total_backers)
+```
+```{r echo=FALSE, fig.width=9}
+# Plot Backers distribution per country
+category_backers %>% 
+  group_by(main_category) %>%
+          ggplot(aes(main_category,total_backers)) + 
+          geom_col(fill = "skyblue3") +
+          theme(axis.text.x = element_text(angle = 90)) +
+          ggtitle("Backers Distribution")
+```
+
 ##### EDA Analysis Summary
+
+Our EDA was exhaustive but gave us some interesting information, here is what we discovered :
+
+- More than ***half (53.37%) of the project failed*** on Kickstarter
+- Nearly ***two-third (63.85%) of the project are not successful** (Failed + Canceled)
+- 9'441 projects (2.8% of all projects) were launched with a ***goal bellow 200$***
+- Some projects have been mysteriously canceled despite having been funded with tens of thousands.
+- On average, ***a project is canceled if he did not get more than 2%*** of the requested funding.
+- The most used Main_Category are in order Film & Video, Music, Publishing, Games & Technology
+- ***Comics (55%), Dance (62%) & Theater (60%)*** are ***the only main_category with more successful projects*** than canceled and failed one. Those categories are also the least used.
+- ***Illustration, Indie Rock, Public Art, Rock, Shorts, Tabletop Games & Theater*** are the only sub_category with more successful projects than canceled and failed ones.
+- There is ***no correlation between the size of a main_category (number of the project) and the sucess_ratio*** (project funded/total projects), but ***the only "positive ratio" are found in main_category with small amount of projects*** (less than 10'000)
+- Us is by far the most represented country on Kickstarter, in general, ***English speaking countries are more present than other countries***
+- ***No country has a positive ratio of funded projects***, the success of a project does not seem relative to its origins.
+- As for the origins of a project, Backers are most likely to be ***from the US or other English speaking countries.***
+- Projects relative to the main_category Games got the highest number of backers.
 
 # Methods & Analysis 
 
+We will now try to find a model with the appropriate approach to correctly predict rating. As stated previously, The best model will be defined as the one with the lowest RMSE. We will evaluate the different approach to try to reach our goal :
+
+- A basic model based on **the average funded project** of the data where ***mu = average pledged ***.
+- An improvement of the basic model with the addition of  ***main_category bias term***
+- An improvement of the second model with the addition of ***sub_category bias term*** in addition to the first one
+- An improvement of the third model by changing the second bias term to ***country bias term*** instead of sub_category
+- A failed attempt of Regularized model of our last improvement, as an independent error term may induce error our the RMSE.
+
+## Average Funded project model
+
+In this first model, we start by building the easiest possible predicting system, while predicting all the unknown funding based on ***mu***, as defined before.
+
+$$Y_{u,i} = \mu,$$
+
+```{r}
+#Compute mu & predict unknown funding based on mu
+mu <- mean(train_kickstarter$pledged)
+average_funding_project <- RMSE(train_kickstarter$pledged, mu)
+average_funding_project
+```
+
+This approach gives us the first RMSE of **97359**.
+
+## Average Funded project model with main_category bias model
+
+In our second model, we will start to implement an independent error term that takes into consideration different pledges for a main_category as ***$b_i$*** is the main_category bias term. As we saw earlier in our analysis projects are not funded the same (in number and average rate), this bias term considers this.
+
+```{r}
+#compute the movie bias b_i
+b_i <- train_kickstarter %>%
+  group_by(main_category) %>%
+  summarize(b_i = mean(pledged - mu))
+```
+ 
+$$ Y_{u,i} = \mu + b_{i} $$
+
+```{r}
+#Predicting the funding with mu and the main_category bias term.
+predicted_funding_1 <- validation_kickstarter %>% 
+  left_join(b_i, by='main_category') %>%
+  mutate(pred = mu + b_i) %>%
+  pull(pred)
+average_funding_project_w_category_biais <- RMSE(predicted_funding_1, validation_kickstarter$pledged)
+average_funding_project_w_category_biais
+```
+
+We improved the accuracy of our RMSE with this first bias ***from 97359 to 86014.***
+
+## Average project funding with main_category & sub_category bias model
+
+In this third iteration of the average project funding model, we are adding a sub_category bias term in addition to the main_category bias term introduce before. This second bias aims to reduce the effect of extreme funding of some projects, related to some sub_category as seen before (few categories have more successful project than failed/canceled ones which is an anomaly compared to the rest of the base) 
+
+```{r message=FALSE, warning=FALSE}
+# Compute the bias term, b_u
+b_u <- train_kickstarter %>% 
+  left_join(b_i, by='main_category') %>%
+  group_by(sub_category) %>%
+  summarize(b_u = mean(pledged - mu - b_i))
+```
+
+$$Y_{u,i} = \mu + b_{i} + b_{u}$$
+
+```{r}
+#Predicting the rating with mu, the main_category and sub_category bias term.
+predicted_funding_2 <- validation_kickstarter %>% 
+  left_join(b_i, by='main_category') %>%
+  left_join(b_u, by='sub_category') %>%
+  mutate(pred = mu + b_i + b_u) %>%
+  pull(pred)
+
+avg_movie_rating_w_subcategory_bias <- RMSE(predicted_funding_2, validation_kickstarter$pledged)
+avg_movie_rating_w_subcategory_bias
+```
+
+We improved the accuracy of our RMSE with this first bias ***from 86014 to 85768.***
+
+## Average project funding with main_category & country bias model
+
+In this fourth iteration of the average project funding model, we are changing our second bias term by country instead of sub_category. As the sub_category is directly related to the first category, It could influence the results and not give us more accuracy.
+
+```{r message=FALSE, warning=FALSE}
+# Compute the bias term, b_u
+b_u <- train_kickstarter %>% 
+  left_join(b_i, by='main_category') %>%
+  group_by(country) %>%
+  summarize(b_u = mean(pledged - mu - b_i))
+```
+
+```{r}
+#Predicting the funding with mu, the main_category and country bias term.
+predicted_funding_3 <- validation_kickstarter %>% 
+  left_join(b_i, by='main_category') %>%
+  left_join(b_u, by='country') %>%
+  mutate(pred = mu + b_i + b_u) %>%
+  pull(pred)
+
+avg_movie_rating_w_country_bias <- RMSE(predicted_funding_3, validation_kickstarter$pledged)
+avg_movie_rating_w_country_bias
+```
+
+We once again improved our RMSE from ***85768. to 85603**.
+
+## Regularized main_category & country effect model
+
+I have tried for the MovieLens project to regularized my previous model but I, unfortunately, failed to do so. Still, here is the code I've tried.
+
+```{r}
+lambdas <- seq(from=25000, to=100000, by=2500)
+```
+
+```{r}
+rmses <- sapply(lambdas, function(l){
+  
+  mu <- mean(train_kickstarter$pledged)
+  
+   b_i <- train_kickstarter %>%
+    group_by(main_category) %>%
+    summarize(b_i = sum(pledged - mu)/(n()+l))
+   
+   b_u <- train_kickstarter %>% 
+    left_join(b_i, by='main_category') %>%
+    group_by(country) %>%
+    summarize(b_u = sum(pledged - b_i - mu)/(n()+l))
+   
+  predicted_funding_3 <- validation_kickstarter %>% 
+    left_join(b_i, by = "main_category") %>%
+    left_join(b_u, by = "country") %>%
+    mutate(pred = mu + b_i + b_u) %>%
+    pull(pred)
+  
+  return(RMSE(predicted_funding_3, validation_kickstarter$rating))
+})
+```
+
+```{r}
+qplot(lambdas, rmses)  
+lambdas[which.min(rmses)]
+```
+
 # Results
 
+By improving step by step our RMSE with the introduction of our first bias term, up to the fourth iteration, we improved the accuracy of our RMSE from ***97359*** to ***85603***. My failed attempt of regularization does not help to improve the results.
+
+We could have explored other approaches such as basing our entire model on a regression line approach through a GLM and KNN approach but due to a lack of time I've chosen another path.
+
 # Conclusion
+
+Our RMSE is not as precise as it could have been. Having a user profile and data frame or having the data frame constructed around user funding instead of the project could have helped to improve our model.
